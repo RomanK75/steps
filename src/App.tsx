@@ -36,11 +36,22 @@ const App = () => {
   };
 
   const addStep = (date: string, distance: number): void => {
-    const newStep = { id: Date.now(), date, distance };
-    const updatedSteps = [...steps, newStep];
-    const sortedSteps = sortSteps(updatedSteps);
-    localStorage.setItem('steps', JSON.stringify(sortedSteps));
-    setSteps(sortedSteps);
+    const existingStep = steps.find((step) => step.date === date);
+  
+    if (existingStep) {
+      const updatedSteps = steps.map((step) =>
+        step.date === date ? { ...step, distance: step.distance + distance } : step
+      );
+      const sortedSteps = sortSteps(updatedSteps);
+      localStorage.setItem('steps', JSON.stringify(sortedSteps));
+      setSteps(sortedSteps);
+    } else {
+      const newStep = { id: Date.now(), date, distance };
+      const updatedSteps = [...steps, newStep];
+      const sortedSteps = sortSteps(updatedSteps);
+      localStorage.setItem('steps', JSON.stringify(sortedSteps));
+      setSteps(sortedSteps);
+    }
   };
 
   return (
